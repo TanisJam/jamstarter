@@ -1,0 +1,38 @@
+---
+import Main from '@layouts/main.astro';
+import Header from '@organisms/Header.astro';
+import Footer from '@molecules/Footer.astro';
+import Card from '@components/molecules/Card.astro';
+
+const content = {
+  title: '{{name}}',
+};
+---
+
+<Main content={content}>
+  <Header />
+
+  <ul role="list" class="flex flex-col gap-2">
+    <Card
+      href="https://docs.astro.build/"
+      title="Documentation"
+      body="Learn how Astro works and explore the official API docs."
+    />
+    <Card
+      href="https://astro.build/integrations/"
+      title="Integrations"
+      body="Supercharge your project with new frameworks and libraries."
+    />
+    <Card
+      href="https://astro.build/themes/"
+      title="Themes"
+      body="Explore a galaxy of community-built starter themes."
+    />
+    <Card
+      href="https://astro.build/chat/"
+      title="Community"
+      body="Come say hi to our amazing Discord community. ❤️"
+    />
+  </ul>
+  <Footer />
+</Main>
