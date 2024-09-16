@@ -1,0 +1,46 @@
+{
+  "name": "jamstarter",
+  "version": "0.1.0",
+  "description": "A CLI tool to kickstart various projects",
+  "main": "dist/index.js",
+  "bin": {
+    "jamstarter": "./dist/index.js"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "keywords": [
+    "cli",
+    "starter",
+    "projects",
+    "typescript",
+    "discord",
+    "astro",
+    "nextjs",
+    "vite",
+    "tailwind",
+    "daisyui"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "start": "node dist/index.js",
+    "test": "jest",
+    "dev": "tsup --watch"
+  },
+  "author": "TanisJam",
+  "license": "ISC",
+  "dependencies": {
+    "glob": "^10.3.5",
+    "picocolors": "^1.0.0",
+    "prompts": "^2.4.2",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/prompts": "^2.4.9",
+    "@types/yargs": "^17.0.32",
+    "prettier": "^3.0.3",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
+  }
+}
