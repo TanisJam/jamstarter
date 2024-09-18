@@ -70,6 +70,10 @@ npx jamstarter -c -n MyComponent
 npx jamstarter -c -n MyComponent -d src/components
 ```
 
+### Demo
+
+<img src="./assets/jamstarter.gif" alt="Jamstarter Demo">
+
 ## 🚀 Future Features
 
 - [x] **Component boilerplate generator**: Create reusable components with predefined structure.
