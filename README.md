@@ -6,6 +6,7 @@ JamStarter is a CLI tool for quickly starting projects using various templates. 
 
 - 🎨 Select from different templates for various types of projects.
 - 📦 Option to add extra files based on the selected template.
+- 🧩 Optional to generate boilerplate for react components.
 
 ## Available Templates
 
@@ -22,6 +23,8 @@ npx jamstarter
 ```
 
 ## Usage
+
+### Creating a Project:
 
 To create a new project, run the following command:
 
@@ -43,6 +46,31 @@ npx jamstarter my-awesome-project -t next-ts-daisyui
 
 This will create a new project named my-awesome-project using the Next.js + TypeScript + DaisyUI template.
 
-## Future Enhancements
+### Creating a Component:
 
-🚀 I plan to expand the functionality of JamStarter to include features such as generating boilerplate files and folders for Atomic Design, this normally is repetitive at the start of a projects.
+To create a new component boilerplate, use the -c or --comp flag:
+
+```bash
+npx jamstarter -c
+```
+
+This will prompt you for the component name and let you select the directory where you want to create it.
+
+#### Customizing the Component:
+
+`Name`: You can specify the component name using the -n or --name flag:
+
+```bash
+npx jamstarter -c -n MyComponent
+```
+
+`Directory`: If you want to create the component in a specific directory, use the -d or --dir flag:
+
+```bash
+npx jamstarter -c -n MyComponent -d src/components
+```
+
+## 🚀 Future Features
+
+- [x] **Component boilerplate generator**: Create reusable components with predefined structure.
+- [ ] **Dockerfile Generation:** Generate optimized Dockerfiles based on your project's `package.json` file.

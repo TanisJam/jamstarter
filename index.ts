@@ -2,13 +2,14 @@
 
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { cp, readFile, writeFile } from 'node:fs/promises';
+import { cp, readFile, writeFile, mkdir, access } from 'node:fs/promises';
 import { glob } from 'glob';
 import color from 'picocolors';
 import prompts from 'prompts';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { getRandomName } from './utils/getRandomName';
+import { selectDirectory } from './utils/directorySelector';
 
 const TEMPLATES = [
   {
@@ -34,6 +35,9 @@ const EXTRAS = {
   ]
 };
 
+const toPascalCase = (str) =>
+  str[0].toUpperCase() + str.slice(1).replace(/[^a-zA-Z0-9]+(.)/g, (_match, char) => char.toUpperCase());
+
 const args = yargs(hideBin(process.argv)).options({
   name: {
     alias: 'n',
@@ -44,15 +48,75 @@ const args = yargs(hideBin(process.argv)).options({
     alias: 't',
     type: 'string',
     description: 'Template to use'
+  },
+  comp: {
+    alias: 'c',
+    type: 'boolean',
+    description: 'Create a component'
+  },
+  dir: {
+    alias: 'd',
+    type: 'string',
+    description: 'Directory to generate the component in'
   }
 });
 
 prompts.override(args.argv);
 
 async function main() {
-  const {
-    _: [initialName, initialProject]
-  } = await args.argv;
+  const { name: initialName, template: initialProject, comp, dir } = await args.argv;
+
+  if (comp) {
+    const componentName = await prompts({
+      type: 'text',
+      name: 'name',
+      initial: initialName ? toPascalCase(initialName) : toPascalCase(getRandomName()),
+      message: 'What is the name of your component?',
+      format: toPascalCase
+    });
+
+    let destinationDir = dir || '';
+
+    if (!dir) {
+      destinationDir = await selectDirectory(process.cwd());
+      if (!destinationDir) {
+        console.log('No directory selected.');
+        console.log(` ${color.yellow(`   No files were created.`)}`);
+        process.exit(1);
+      }
+    }
+
+    const TemplateIndex = `export { default as ${componentName.name} } from './${componentName.name}';`;
+    const TemplateComponent = `export default function ${componentName.name}() {return <h3>This is ${componentName.name}</h3>;}`;
+    const componentFolder = path.join(destinationDir, componentName.name);
+    const componentPath = path.join(componentFolder, `${componentName.name}.tsx`);
+    const indexPath = path.join(componentFolder, 'index.ts');
+
+    try {
+      await access(componentPath);
+      console.log(color.red(`\n ❗Component with the same name ${color.bgCyan(componentName.name)} already exists in:`));
+      console.log(color.yellowBright('   ' + color.underline(destinationDir)));
+      console.log(` ${color.yellow(`  No files were created.`)}`);
+      process.exit(1);
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        try {
+          await mkdir(componentFolder, { recursive: true });
+          await writeFile(componentPath, TemplateComponent, {
+            encoding: 'utf8'
+          });
+          await writeFile(indexPath, TemplateIndex, { encoding: 'utf8' });
+
+          console.log(`\n ${color.green(` ✔️ Component created successfully`)} 🎉`);
+        } catch (error) {
+          console.error(`\n ${color.red(` ❗Error creating the component:`)} ${error}`);
+          return;
+        }
+      }
+    }
+
+    process.exit(0);
+  }
 
   const project = await prompts(
     [
